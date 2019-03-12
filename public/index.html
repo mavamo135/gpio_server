@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			.switch {
+				position: relative;
+				display: inline-block;
+				width: 60px;
+				height: 34px;
+			}
+			.switch input {display:none;}
+			.slider {
+				position: absolute;
+				cursor: pointer;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: #ccc;
+				-webkit-transition: .4s;
+				transition: .4s;
+			}
+			.slider:before {
+				position: absolute;
+				content: "";
+				height: 26px;
+				width: 26px;
+				left: 4px;
+				bottom: 4px;
+				background-color: white;
+				-webkit-transition: .4s;
+				transition: .4s;
+			}
+			input:checked + .slider {
+				background-color: #2196F3;
+			}
+			input:focus + .slider {
+				box-shadow: 0 0 1px #2196F3;
+			}
+			input:checked + .slider:before {
+				-webkit-transform: translateX(26px);
+				-ms-transform: translateX(26px);
+				transform: translateX(26px);
+			}
+			/* Rounded sliders */
+			.slider.round {
+				border-radius: 34px;
+			}
+			.slider.round:before {
+				border-radius: 50%;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Control LED state</h1>
+		<p>USR0 
+			<label class="switch">
+				<input type="checkbox" id="led1">
+				<span class="slider round"></span>
+			</label>
+		</p>
+		<p>USR1 
+			<label class="switch">
+				<input type="checkbox" id="led2">
+				<span class="slider round"></span>
+			</label>
+		</p>
+		<p>USR2 
+			<label class="switch">
+				<input type="checkbox" id="led3">
+				<span class="slider round"></span>
+			</label>
+		</p>
+		<p>USR3 
+			<label class="switch">
+				<input type="checkbox" id="led4">
+				<span class="slider round"></span>
+			</label>
+		</p>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> <!-- include socket.io client side script -->
+		<script>
+			var socket = io(); // Load socket.io-client and connect to the host that serves the page
+			window.addEventListener("load", function(){ // When page loads
+				var led1CB = document.getElementById("led1")
+				led1CB.addEventListener("change", function() { // Add event listener for when checkbox changes
+				  socket.emit("led1", Number(this.checked)) // Send button status to server (as 1 or 0)
+				})
+				var led2CB = document.getElementById("led2")
+				led2CB.addEventListener("change", function() { // Add event listener for when checkbox changes
+				  socket.emit("led2", Number(this.checked)) // Send button status to server (as 1 or 0)
+				})
+				var led3CB = document.getElementById("led3")
+				led3CB.addEventListener("change", function() { // Add event listener for when checkbox changes
+				  socket.emit("led3", Number(this.checked)) // Send button status to server (as 1 or 0)
+				})
+				var led4CB = document.getElementById("led4")
+				led4CB.addEventListener("change", function() { // Add event listener for when checkbox changes
+				  socket.emit("led4", Number(this.checked)) // Send button status to server (as 1 or 0)
+				})
+			})
+			socket.on("led1", function (data) { // Get button status from client
+			    console.log("led1: " + data)
+				document.getElementById("led1").checked = data; // Change checkbox according to push button or actual state
+			})
+			socket.on("led2", function (data) { // Get button status from client
+			    console.log("led2: " + data)
+				document.getElementById("led2").checked = data; // Change checkbox according to push button or actual state
+			})
+			socket.on("led3", function (data) { // Get button status from client
+			    console.log("led3: " + data)
+				document.getElementById("led3").checked = data; // Change checkbox according to push button or actual state
+			})
+			socket.on("led4", function (data) { // Get button status from client
+			    console.log("led4: " + data)
+				document.getElementById("led4").checked = data; // Change checkbox according to push button or actual state
+			})
+		</script>
+	</body>
+</html> 
